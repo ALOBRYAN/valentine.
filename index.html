@@ -20,6 +20,7 @@
       padding: 20px;
       text-align: center;
       box-shadow: 0 5px 20px rgba(0,0,0,.1);
+      position: relative; /* important pour que le bouton NON reste dedans */
     }
     img {
       max-width: 220px;
@@ -43,12 +44,12 @@
       font-size: 16px;
     }
     .yes { background: #22c55e; color: #fff; }
-    .no  { background: #ef4444; color: #fff; position: relative; }
+    .no  { background: #ef4444; color: #fff; position: absolute; }
     #result { display: none; }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="card">
     <!-- Question -->
     <section id="question">
       <img src="IMG_9271.png" alt="Ours avec une rose" />
@@ -72,12 +73,17 @@
     const btnNo  = document.getElementById("btnNo");
     const question = document.getElementById("question");
     const result   = document.getElementById("result");
+    const card     = document.getElementById("card");
 
-    // Le bouton NON essaie de fuir 😅
+    // Le bouton NON essaie de fuir 😅 (reste dans la carte)
     btnNo.addEventListener("mouseenter", () => {
-      btnNo.style.position = "absolute";
-      btnNo.style.left = Math.random() * (window.innerWidth - 100) + "px";
-      btnNo.style.top  = Math.random() * (window.innerHeight - 50) + "px";
+      const cardRect = card.getBoundingClientRect();
+      const maxX = cardRect.width - btnNo.offsetWidth - 20;
+      const maxY = cardRect.height - btnNo.offsetHeight - 20;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      btnNo.style.left = x + "px";
+      btnNo.style.top  = y + "px";
     });
 
     // Si OUI → affiche le résultat
