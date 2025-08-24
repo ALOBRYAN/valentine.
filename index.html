@@ -5,261 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Veux-tu sortir avec moi ?</title>
   <style>
-    :root {
-      --pink: #f8bccc;
-      --pink-dark: #f3a4bd;
-      --bg: #ffd6e5;
-      --green: #22c55e;
-      --red: #ef4444;
-      --text: #111827;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Emoji, Noto Color Emoji, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: grid;
-      place-items: center;
+      font-family: system-ui, sans-serif;
+      background: #ffb6c1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-
     .card {
-      width: min(840px, 92vw);
-      background: #fff7fb;
-      border-radius: 28px;
-      padding: clamp(18px, 3.5vw, 36px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .imgbox {
-      height: clamp(160px, 35vw, 260px);
-      display: grid;
-      place-items: center;
-      background: white;
-      border-radius: 22px;
-      margin: 8px auto 24px;
-      width: min(520px, 80%);
-      box-shadow: inset 0 0 0 1px #f3e1ea;
-      position: relative;
-    }
-    .emoji {
-      font-size: clamp(80px, 16vw, 140px);
-    }
-
-    h1 { 
-      text-align: center; 
-      font-size: clamp(22px, 4.2vw, 42px);
-      margin: 12px 0 22px;
-    }
-
-    .btns { 
-      display: flex; 
-      gap: 18px; 
-      justify-content: center; 
-      flex-wrap: wrap;
-    }
-
-    button {
-      appearance: none; border: 0; cursor: pointer; font-weight: 800;
-      padding: 16px 32px; border-radius: 18px; font-size: clamp(18px, 3.2vw, 24px);
-      box-shadow: 0 8px 20px rgba(0,0,0,.12);
-      transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
-      color: white;
-    }
-    .yes { background: var(--green); }
-    .no  { background: var(--red); position: relative; }
-
-    button:active { transform: translateY(1px) scale(.98); }
-    button:hover  { filter: saturate(1.1); }
-
-    /* Result screen */
-    .result {
-      display: none;
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
       text-align: center;
-      padding: 16px 0 20vh;
+      box-shadow: 0 5px 20px rgba(0,0,0,.1);
     }
-    .result h2 {
-      font-size: clamp(24px, 4.5vw, 46px);
-      margin: 10px 0 6px;
+    img {
+      max-width: 220px;
+      border-radius: 12px;
     }
-    .result p.big {
-      font-weight: 900;
-      font-size: clamp(26px, 5.8vw, 58px);
-      margin: 8px auto 0;
-      max-width: 20ch;
-      line-height: 1.1;
+    h1, h2 {
+      margin: 15px 0;
     }
-
-    /* Confetti canvas */
-    canvas#confetti, canvas#hearts { position: fixed; inset: 0; pointer-events: none; }
-
-    /* Tiny badge */
-    .badge { position:absolute; right:14px; bottom:12px; font-size:12px; opacity:.5 }
+    .btns {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .yes { background: #22c55e; color: #fff; }
+    .no  { background: #ef4444; color: #fff; position: relative; }
+    #result { display: none; }
   </style>
 </head>
 <body>
-  <canvas id="confetti"></canvas>
-  <canvas id="hearts"></canvas>
-  <main class="card">
-    <!-- QUESTION SCREEN -->
-    <section id="q">
-      <div class="imgbox"><div class="emoji" aria-hidden>🧸🌹</div></div>
-      <h1>Veux‑tu sortir avec moi pour la Saint‑Valentin&nbsp;?</h1>
+  <div class="card">
+    <!-- Question -->
+    <section id="question">
+      <img src="IMG_9271.png" alt="Ours avec une rose" />
+      <h1>Veux-tu sortir avec moi pour la Saint-Valentin ?</h1>
       <div class="btns">
         <button class="yes" id="btnYes">OUI</button>
-        <button class="no"  id="btnNo">NON</button>
+        <button class="no" id="btnNo">NON</button>
       </div>
     </section>
 
-    <!-- RESULT SCREEN -->
-    <section id="r" class="result" aria-hidden="true">
-      <div class="imgbox"><div class="emoji" aria-hidden>🤗✨</div></div>
+    <!-- Résultat -->
+    <section id="result">
+      <img src="IMG_9272.png" alt="Chats mignons" />
       <h2>You're so CUTE!</h2>
-      <p class="big">OUIIII JE LE SAVAIS !! T'ES LA MEILLEURE ❤️</p>
-      <div class="badge">Fait avec ❤</div>
+      <p><strong>OUIIII JE LE SAVAIS !! T’ES LA MEILLEURE ❤️</strong></p>
     </section>
-  </main>
+  </div>
 
   <script>
-    const q = document.getElementById('q');
-    const r = document.getElementById('r');
-    const yes = document.getElementById('btnYes');
-    const no  = document.getElementById('btnNo');
+    const btnYes = document.getElementById("btnYes");
+    const btnNo  = document.getElementById("btnNo");
+    const question = document.getElementById("question");
+    const result   = document.getElementById("result");
 
-    // --- Playful NO button: escape on hover ---
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-    function moveNo(e){
-      const b = no.getBoundingClientRect();
-      const pad = 10;
-      const x = clamp(Math.random()*(window.innerWidth  - b.width  - pad*2), pad, window.innerWidth  - b.width  - pad);
-      const y = clamp(Math.random()*(window.innerHeight - b.height - pad*2), pad, window.innerHeight - b.height - pad);
-      no.style.position = 'fixed';
-      no.style.left = x+ 'px';
-      no.style.top  = y+ 'px';
-    }
-    no.addEventListener('mouseenter', moveNo);
-    no.addEventListener('touchstart', (e)=>{ moveNo(); });
-
-    // --- YES flow ---
-    yes.addEventListener('click', () => {
-      q.style.display = 'none';
-      r.style.display = 'block';
-      r.setAttribute('aria-hidden','false');
-      burstConfetti();
-      rainHearts();
+    // Le bouton NON essaie de fuir 😅
+    btnNo.addEventListener("mouseenter", () => {
+      btnNo.style.position = "absolute";
+      btnNo.style.left = Math.random() * (window.innerWidth - 100) + "px";
+      btnNo.style.top  = Math.random() * (window.innerHeight - 50) + "px";
     });
 
-    // ---------- Confetti ----------
-    const confettiCanvas = document.getElementById('confetti');
-    const ctx = confettiCanvas.getContext('2d');
-    const DPR = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-
-    function sizeCanvas() {
-      confettiCanvas.width = Math.floor(innerWidth * DPR);
-      confettiCanvas.height = Math.floor(innerHeight * DPR);
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-    sizeCanvas();
-    addEventListener('resize', sizeCanvas);
-
-    let confetti = [];
-    function makeConfetto(x, y){
-      const colors = ['#ff4d6d','#ffb4d8','#ffe066','#7dd3fc','#86efac','#c4b5fd'];
-      return {
-        x, y,
-        w: 6 + Math.random()*8,
-        h: 10 + Math.random()*16,
-        r: Math.random()*Math.PI,
-        rs: (Math.random()*4-2)*0.05,
-        vx: (Math.random()*2-1)*2,
-        vy: - (6 + Math.random()*6),
-        g: 0.25 + Math.random()*0.15,
-        color: colors[Math.floor(Math.random()*colors.length)]
-      };
-    }
-
-    function burstConfetti(){
-      const cx = innerWidth/2;
-      const cy = innerHeight/3;
-      for(let i=0;i<200;i++) confetti.push(makeConfetto(cx, cy));
-      if(!animating) animate();
-    }
-
-    let animating = false;
-    function animate(){
-      animating = true;
-      ctx.clearRect(0,0,innerWidth,innerHeight);
-      confetti.forEach((c)=>{
-        c.vy += c.g; // gravity
-        c.x  += c.vx;
-        c.y  += c.vy;
-        c.r  += c.rs;
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.r);
-        ctx.fillStyle = c.color;
-        ctx.fillRect(-c.w/2, -c.h/2, c.w, c.h);
-        ctx.restore();
-      });
-      confetti = confetti.filter(c => c.y < innerHeight + 40);
-      if(confetti.length){ requestAnimationFrame(animate); }
-      else { animating = false; }
-    }
-
-    // ---------- Floating hearts rain ----------
-    const heartCanvas = document.getElementById('hearts');
-    const hctx = heartCanvas.getContext('2d');
-    function sizeHeart(){ heartCanvas.width=innerWidth*DPR; heartCanvas.height=innerHeight*DPR; hctx.setTransform(DPR,0,0,DPR,0,0); }
-    sizeHeart();
-    addEventListener('resize', sizeHeart);
-
-    let hearts = [];
-    function heart(x, y){
-      const s = 10 + Math.random()*18;
-      return { x, y, s, vy: 0.8 + Math.random()*1.2, vx: (Math.random()-.5)*.6, a: 1 };
-    }
-    function drawHeart(x,y,s){
-      hctx.save();
-      hctx.translate(x,y);
-      hctx.scale(s/24, s/24);
-      hctx.beginPath();
-      hctx.moveTo(12,21);
-      hctx.bezierCurveTo(10,19,3,14,3,8);
-      hctx.bezierCurveTo(3,5,6,3,8.8,3);
-      hctx.bezierCurveTo(11,3,12,5.2,12,6.6);
-      hctx.bezierCurveTo(12,5.2,13,3,15.2,3);
-      hctx.bezierCurveTo(18,3,21,5,21,8);
-      hctx.bezierCurveTo(21,14,14,19,12,21);
-      hctx.closePath();
-      hctx.fillStyle = 'rgba(255,0,70,0.85)';
-      hctx.fill();
-      hctx.restore();
-    }
-
-    function rainHearts(){
-      const cx = innerWidth/2;
-      for(let i=0;i<40;i++) hearts.push(heart(cx + (Math.random()*220-110), -20 - Math.random()*200));
-      if(!heartAnimating) heartLoop();
-    }
-
-    let heartAnimating=false;
-    function heartLoop(){
-      heartAnimating=true;
-      hctx.clearRect(0,0,innerWidth,innerHeight);
-      hearts.forEach(h=>{
-        h.y += h.vy; h.x += h.vx; h.a -= 0.0025;
-        drawHeart(h.x,h.y,h.s);
-      });
-      hearts = hearts.filter(h=> h.y < innerHeight + 30 && h.a>0);
-      if(hearts.length){ requestAnimationFrame(heartLoop); }
-      else { heartAnimating=false; }
-    }
-
-    // Accessibility: press Y for yes
-    addEventListener('keydown', (e)=>{ if(['y','o','Y','O'].includes(e.key)) yes.click(); });
+    // Si OUI → affiche le résultat
+    btnYes.addEventListener("click", () => {
+      question.style.display = "none";
+      result.style.display = "block";
+    });
   </script>
 </body>
 </html>
